@@ -1,13 +1,14 @@
 import express from "express"
-
+import bodyParser from 'body-parser';
+import axios1 from "axios"
+import axios2 from "axios"
 var msg = 'Start';
 console.log(msg);
 
-const axios1 = require('axios');
-const axios2 = require('axios');
-//const { resolve } = require('path');
+const app = express();
+const PORT = 5080;
 
-const router = express.Router();
+//const { resolve } = require('path');
 
 var id;
 var value;
@@ -18,7 +19,7 @@ function postExport(){
         axios1
             .post("http://127.0.0.1:3080/api/appengine/tests/current/exports", {
                 "type": "channel",
-                "inputChannel": "Zwick.Channel.Ztl.CyclesNumberMsr"
+                "inputChannel": "Zwick.Channel.Ztl.TimeMsr"
             })
             .then(res => {
                 console.log(`statusCode: ${res.status}`);
@@ -60,10 +61,16 @@ async function getValue(){
     console.log(task2);
 }
 
-router.get('/exports/', (req, res) => {
+app.get('/exports/', async(req, res) => {
     await getValue();
     res.send(value);
 });
+
+app.use(bodyParser.json());
+
+app.get('/', (req, res) => {res.send('Tesserakt');});
+
+app.listen(PORT, () => console.log(`Server running on port: http://localhost:${PORT}`));
 
 //getValue();
 /*console.log(id);
